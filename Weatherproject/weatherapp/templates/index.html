@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - Real-time Weather Forecast</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+    </button>
+    <div class="app-wrapper">
+        <div class="container">
+            <h1 class="app-title">
+                <span class="weather-icon">🌤️</span>
+                Weather Forecast
+            </h1>
+            <p class="app-subtitle">Get real-time weather information for any city</p>
+        </div>
+
+        <form method="post" class="search-form">
+            {% csrf_token %}
+            <div class="input-wrapper">
+                <input type="text" name="city" placeholder="Enter city name..." class="city-input" value="{% if city %}{{ city }}{% endif %}">
+                <button type="submit" class="search-btn">
+                    <span class="btn-text">Search</span>
+                    <span class="btn-icon">🔍</span>
+                </button>
+            </div>
+        </form>
+
+        {% if error %}
+            <div class="error-message">
+                <div class="error-icon">⚠️</div>
+                <div class="error-content">
+                    <strong>Error:</strong> {{ error }}
+                </div>
+            </div>
+        {% elif temp %}
+            <div class="weather-card">
+                <div class="weather-main">
+                    <div class="temperature-section">
+                        <div class="temp-value">{{temp}}<span class="temp-unit">°C</span></div>
+                        <div class="city-name">{{city|title}}</div>
+                        <div class="date-info">{{day}}</div>
+                    </div>
+                    <div class="weather-icon-section">
+                        <img src="https://openweathermap.org/img/wn/{{icon}}@2x.png" alt="weather icon" class="weather-icon-img">
+                        <div class="weather-description">{{description|title}}</div>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">💧</div>
+                        <div class="detail-content">
+                            <div class="detail-label">Humidity</div>
+                            <div class="detail-value">{{humidity}}%</div>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">💨</div>
+                        <div class="detail-content">
+                            <div class="detail-label">Wind Speed</div>
+                            <div class="detail-value">{{wind_speed}} km/h</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'day'
+        const currentTheme = localStorage.getItem('theme') || 'day';
+        
+        // Apply saved theme on page load
+        if (currentTheme === 'night') {
+            body.classList.add('night-mode');
+            themeIcon.textContent = '☀️';
+        } else {
+            themeIcon.textContent = '🌙';
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('night-mode');
+            
+            if (body.classList.contains('night-mode')) {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'night');
+            } else {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'day');
+            }
+        });
+    </script>
+</body>
+</html>
+
