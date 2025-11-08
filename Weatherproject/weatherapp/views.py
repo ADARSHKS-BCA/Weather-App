@@ -4,7 +4,7 @@ import datetime
 
 def get_weather_data(city):
     """Helper function to fetch weather data for a given city"""
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=922b6b99989de7b38a4fb31ae1ab1228'
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api-key}'
     PARAMS = {'units': 'metric'}
     
     try:
