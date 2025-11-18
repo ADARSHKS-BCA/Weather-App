@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import requests
-import datetime 
+import datetime
 
 def get_weather_data(city):
     """Helper function to fetch weather data for a given city"""
